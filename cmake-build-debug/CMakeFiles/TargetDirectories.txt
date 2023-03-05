@@ -1,0 +1,3 @@
+/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/RatMarchEngine.dir
+/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
