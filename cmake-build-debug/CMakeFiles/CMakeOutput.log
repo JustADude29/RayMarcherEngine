@@ -403,3 +403,51 @@ Parsed CXX implicit link information from above output:
   implicit fwks: []
 
 
+Determining if the function XOpenDisplay exists in the /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_e8315 && [1/2] Building C object CMakeFiles/cmTC_e8315.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_e8315
+
+
+
+Determining if the function gethostbyname exists passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_5e5de && [1/2] Building C object CMakeFiles/cmTC_5e5de.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_5e5de
+
+
+
+Determining if the function connect exists passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_68040 && [1/2] Building C object CMakeFiles/cmTC_68040.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_68040
+
+
+
+Determining if the function remove exists passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_75c51 && [1/2] Building C object CMakeFiles/cmTC_75c51.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_75c51
+
+
+
+Determining if the function shmat exists passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_ca252 && [1/2] Building C object CMakeFiles/cmTC_ca252.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_ca252
+
+
+
+Determining if the function IceConnectionNumber exists in the ICE passed with the following output:
+Change Dir: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/app/extra/clion/bin/ninja/linux/x64/ninja cmTC_61741 && [1/2] Building C object CMakeFiles/cmTC_61741.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_61741
+
+
+
