@@ -23,7 +23,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /app/extra/clion/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-subbuild -B/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-subbuild
+  command = /app/extra/clion/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-subbuild -B/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-subbuild
   description = Re-running CMake...
   generator = 1
 

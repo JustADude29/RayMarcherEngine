@@ -1,4 +1,4 @@
-# Install script for directory: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src/src/SFML/System
+# Install script for directory: /home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src/src/SFML/System
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -55,8 +55,8 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
     endif()
   endforeach()
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so.2.5.1"
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so.2.5"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so.2.5.1"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so.2.5"
     )
   foreach(file
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-system-d.so.2.5.1"
@@ -78,7 +78,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-system-d.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-system-d.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-system-d.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-system-d.so")
     if(CMAKE_INSTALL_DO_STRIP)

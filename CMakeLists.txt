@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(RatMarchEngine LANGUAGES CXX)
+project(RayMarchEngine LANGUAGES CXX)
 
 include(FetchContent)
 FETCHCONTENT_DECLARE(SFML

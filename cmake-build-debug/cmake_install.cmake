@@ -1,4 +1,4 @@
-# Install script for directory: /home/pavan/CLionProjects/RatMarchEngine
+# Install script for directory: /home/pavan/CLionProjects/RayMarcherEngine
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,25 +44,25 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/cmake_install.cmake")
+  include("/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine"
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/RatMarchEngine")
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/RayMarchEngine")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine")
     file(RPATH_CHANGE
-         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine"
-         OLD_RPATH "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib:"
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine"
+         OLD_RPATH "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RatMarchEngine")
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/RayMarchEngine")
     endif()
   endif()
 endif()
@@ -75,5 +75,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

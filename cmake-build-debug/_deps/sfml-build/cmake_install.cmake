@@ -1,4 +1,4 @@
-# Install script for directory: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src
+# Install script for directory: /home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -51,7 +51,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-all.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-all.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -63,7 +63,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-system.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-system.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -75,7 +75,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-window.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-window.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -87,7 +87,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-graphics.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-graphics.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -99,7 +99,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-audio.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-audio.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -111,26 +111,26 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-network.pc")
+  file(INSTALL DESTINATION "/usr/local/pkgconfig" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/tools/pkg-config/sfml-network.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/." TYPE DIRECTORY FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src/include" FILES_MATCHING REGEX "/[^/]*\\.hpp$" REGEX "/[^/]*\\.inl$")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/." TYPE DIRECTORY FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src/include" FILES_MATCHING REGEX "/[^/]*\\.hpp$" REGEX "/[^/]*\\.inl$")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src/license.md")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src/license.md")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src/readme.md")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src/readme.md")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML/SFMLSharedTargets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML/SFMLSharedTargets.cmake"
-         "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets.cmake")
+         "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML/SFMLSharedTargets-*.cmake")
       if(_cmake_old_config_files)
@@ -143,23 +143,23 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML" TYPE FILE FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/CMakeFiles/Export/4167bfb6d915f4531ac82819e1e250af/SFMLSharedTargets-debug.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/SFML" TYPE FILE FILES
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/SFMLConfig.cmake"
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/SFMLConfigDependencies.cmake"
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/SFMLConfigVersion.cmake"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/SFMLConfig.cmake"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/SFMLConfigDependencies.cmake"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/SFMLConfigVersion.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/src/SFML/cmake_install.cmake")
+  include("/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/src/SFML/cmake_install.cmake")
 
 endif()
 

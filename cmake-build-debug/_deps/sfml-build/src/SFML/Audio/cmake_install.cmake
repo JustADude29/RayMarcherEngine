@@ -1,4 +1,4 @@
-# Install script for directory: /home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-src/src/SFML/Audio
+# Install script for directory: /home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-src/src/SFML/Audio
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -55,8 +55,8 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
     endif()
   endforeach()
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so.2.5.1"
-    "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so.2.5"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so.2.5.1"
+    "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so.2.5"
     )
   foreach(file
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so.2.5.1"
@@ -66,7 +66,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
        NOT IS_SYMLINK "${file}")
       file(RPATH_CHANGE
            FILE "${file}"
-           OLD_RPATH "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib:"
+           OLD_RPATH "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib:"
            NEW_RPATH "")
       if(CMAKE_INSTALL_DO_STRIP)
         execute_process(COMMAND "/usr/bin/strip" "${file}")
@@ -82,12 +82,12 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE SHARED_LIBRARY FILES "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib/libsfml-audio-d.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so"
-         OLD_RPATH "/home/pavan/CLionProjects/RatMarchEngine/cmake-build-debug/_deps/sfml-build/lib:"
+         OLD_RPATH "/home/pavan/CLionProjects/RayMarcherEngine/cmake-build-debug/_deps/sfml-build/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/libsfml-audio-d.so")
