@@ -1,34 +1,31 @@
 #version 440 core
 
+uniform vec2 u_mouse_delta;
 uniform vec2 u_resolution;
-uniform float u_Time;
-uniform vec3 u_mouse;
 uniform vec3 origin;
 
 out vec4 fs_color;
 
-const float FOV = 1.0;
+const float FOV = 2.0;
 const int MAX_STEPS = 256;
-const float MAX_DIST = 500;
+const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
-float fractal(vec3 p) {
-    vec3 z = p;
-    float d = length(p);
-    float n = 0.0;
-    float r;
-    for (int i = 0; i < 64; i++) {
-        r = length(z);
-        if (r > 2.0) break;
-        z = vec3(pow(r, 8.0) * cos(8.0 * atan(z.y, z.x)) * cos(8.0 * acos(z.z / r)),
-        pow(r, 8.0) * sin(8.0 * atan(z.y, z.x)) * cos(8.0 * acos(z.z / r)),
-        pow(r, 8.0) * sin(8.0 * acos(z.z / r)));
-        n++;
-    }
-    return 0.5 * log(length(z)) / log(2.0) + 4.0 - n;
+float Voronesque( in vec3 p )
+{
+
+    vec3 i  = floor(p+dot(p, vec3(0.333333)) );  p -= i - dot(i, vec3(0.166666)) ;
+    vec3 i1 = step(0., p-p.yzx), i2 = max(i1, 1.0-i1.zxy); i1 = min(i1, 1.0-i1.zxy);
+    vec3 p1 = p - i1 + 0.166666, p2 = p - i2 + 0.333333, p3 = p - 0.5;
+    vec3 rnd = vec3(5.46,62.8,164.98); // my tuning
+    vec4 v = max(0.5 - vec4(dot(p, p), dot(p1, p1), dot(p2, p2), dot(p3, p3)), 0.);
+    vec4 d = vec4( dot(i, rnd), dot(i + i1, rnd), dot(i + i2, rnd), dot(i + 1., rnd) );
+    d = fract(sin(d)*1000.)*v*2.;
+    v.x = max(d.x, d.y), v.y = max(d.z, d.w);
+    return max(v.x, v.y);
 }
 
-float sdOctahedron( vec3 p, float s)
+float sdOctahedron(vec3 p, float s)
 {
     p = abs(p);
     float m = p.x+p.y+p.z-s;
@@ -42,9 +39,14 @@ float sdOctahedron( vec3 p, float s)
     return length(vec3(q.x,q.y-s+k,q.z-k));
 }
 
+float fractal(in vec3 p){
+    p = cos(p*2.);
+    float m = length(p) - 1.6;
+    return m + sqrt(Voronesque(p)*0.5);
+}
 
 float map(vec3 p){
-    p = mod(p, 4.f) - 4.0*0.5;
+    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
     float sphereDist = length(p) - 1.0;
     float sphereID = 1.0;
@@ -54,38 +56,79 @@ float map(vec3 p){
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = sphere;
+    float res = octa;
     return res;
 }
 
-float rayMarch(vec3 ro, vec3 rd){
-    float hit, object;
+vec3 calcNorm(vec3 pos){
+    vec2 e = vec2(0.001f, 0.f);
+    return normalize(
+        vec3(map(pos+e.xyy)-map(pos-e.xyy),
+            map(pos+e.yxy)-map(pos-e.yxy),
+            map(pos+e.yyx)-map(pos-e.yyx)
+        )
+    );
+}
+
+float diffuse_intensity(in vec3 pos, in vec3 normal_dir){
+    const vec3 l1 = vec3(0.f, -10.f, 0.f);
+    const vec3 l2 = vec3(-5.f, -5.f, -5.f);
+
+    float temp = max(dot(normal_dir,normalize(pos-l1)), dot(normal_dir,normalize(pos-l2)));
+    return max(0.1f, temp);
+}
+
+vec4 rayMarch(vec3 ro, vec3 rd){
+    float hit, object=0;
     for(int i=0;i<MAX_STEPS;i++){
         vec3 p = ro + object.x * rd;
         hit = map(p);
         object += hit;
-        if (abs(hit) < HIT_DIST || object > MAX_DIST) break;
+        if(abs(hit) < HIT_DIST){
+            vec3 norm = calcNorm(p);
+            return vec4(vec3(2.f, 1.f, 2.f) * diffuse_intensity(p, norm), 1.f);
+        }
+
+        if(abs(hit)>MAX_DIST)   break;
     }
-    return object;
+    return vec4(0.f, 1.f, 1.f, 0.8f);
 }
 
+mat3 camRot(vec2 angle){
+    vec2 c = cos(angle);
+    vec2 s = sin(angle);
 
-void render(inout vec3 col, in vec2 uv){
-    vec3 ro = origin;
-    vec3 rd = normalize(vec3(uv, FOV));
+    return mat3(
+        c.y      ,  0.f,      -s.y,
+        s.y * s.x,  c.x, c.y * s.x,
+        s.y * c.x, -s.x, c.y * c.x
+    );
+}
 
-    float object = rayMarch(ro, rd);
+vec3 rayDirection(in vec2 uv){
+    vec3 direction = normalize(vec3(uv, 1.5f));
 
-    if(object.x < MAX_DIST){
-        col += vec3(1.f, 2.f, 2.f) / object;
+    return direction;
+}
+
+void render(inout vec4 col, in vec2 uv){
+    vec3 ro = vec3(0,0,0);
+    vec3 rd = rayDirection(uv);
+
+    mat3 rot = camRot((u_mouse_delta - u_resolution * 0.5).yx * vec2(0.003, 0.003));
+    if(u_mouse_delta.x!=0 && u_mouse_delta.y!=0){
+        rd = rot * rd;
     }
+    ro = ro + length(origin) * normalize(rot*origin);
+
+    col = rayMarch(ro, rd);
 }
 
 void main(){
     vec2 uv = (2.0 * gl_FragCoord.xy - u_resolution.xy) / u_resolution.y;
 
-    vec3 col;
+    vec4 col;
     render(col, uv);
 
-    fs_color = vec4(col, 1.f);
+    fs_color = col;
 }
