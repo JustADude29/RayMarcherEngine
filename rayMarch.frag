@@ -7,7 +7,7 @@ uniform vec3 origin;
 out vec4 fs_color;
 
 const float FOV = 2.0;
-const int MAX_STEPS = 256;
+const int MAX_STEPS = 512;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
@@ -119,7 +119,7 @@ void render(inout vec4 col, in vec2 uv){
     if(u_mouse_delta.x!=0 && u_mouse_delta.y!=0){
         rd = rot * rd;
     }
-    ro = ro + length(origin) * normalize(rot*origin);
+    ro = origin;
 
     col = rayMarch(ro, rd);
 }

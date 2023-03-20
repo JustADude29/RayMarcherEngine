@@ -9,13 +9,13 @@
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 
-const int WIDTH = 800;
-const int HEIGHT = 400;
+const int WIDTH = 1600;
+const int HEIGHT = 900;
 
 const float xSens = 0.01;
 const float ySens = 0.01;
 
-void mouseMove();
+Eigen::Matrix3f getCamRot(Eigen::Vector2f angle);
 
 int main(){
     //fps stuff
@@ -55,13 +55,14 @@ int main(){
 
     //WASD movement stuff
     sf::Vector3f v = sf::Vector3f (0.f,0.f,1.f);
-
-    sf::Vector3f Origin = sf::Vector3f (0.f, 0.f, -0.3f);
+    sf::Vector3f Origin = sf::Vector3f (0.f, 0.f, 0.f);
     ShaderFrag.setUniform("origin", Origin);
     float speedMult = 2.f;
 
     //Mouse movement stuff
-    sf::Glsl::Vec2 mouseDelta;
+    sf::Glsl::Vec2 mouseDelta = sf::Glsl::Vec2 (0,0);
+    sf::Glsl::Vec2 mousePos;
+    bool mouseEnabled = false;
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
@@ -86,32 +87,49 @@ int main(){
         frame_time = clock2.restart().asSeconds();
 
         //WASD movement
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-            v.x -= frame_time * speedMult;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-            v.x += frame_time * speedMult;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-            v.z += frame_time * speedMult;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-            v.z -= frame_time * speedMult;
-        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+//            v.x -= frame_time * speedMult;
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+//            v.x += frame_time * speedMult;
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+//            v.z += frame_time * speedMult;
+//        }
+//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+//            v.z -= frame_time * speedMult;
+//        }
         Origin += v;
         v = sf::Vector3f (0.f, 0.f, 0.f);
         ShaderFrag.setUniform("origin", Origin);
 
         //Mouse rotate
-//        sf::Vector2f center(resolution.x/2, resolution.y/2);
-//        mouseDelta = sf::Glsl::Vec2 (sf::Vector2f (sf::Mouse::getPosition(window)) - center);
-//        mouseDelta = sf::Vector2f (mouseDelta.x / resolution.x, mouseDelta.y / resolution.y);
-//        sf::Mouse::setPosition(sf::Vector2i (center), window);
-        if(sf::Event::MouseMoved){
-            mouseDelta = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        sf::Vector2i center = sf::Vector2i(window.getSize().x/2, window.getSize().y/2);
+        if(sf::Event::MouseMoved && !mouseEnabled){
+            mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            mouseDelta += mousePos - sf::Glsl::Vec2(center);
         }
+        sf::Mouse::setPosition(center, window);
         ShaderFrag.setUniform("u_mouse_delta", sf::Glsl::Vec2(mouseDelta.x-1, mouseDelta.y-1));
-        std::cout<<mouseDelta.x<<" "<<mouseDelta.y<< std::endl;
+        std::cout<<center.x<<" "<<center.y<< std::endl;
+        std::cout<<mousePos.x<<" "<<mousePos.y<< std::endl;
+        std::cout<<std::endl;
+
+        Eigen::Vector2f angle = Eigen::Vector2f(mouseDelta.y-resolution.y * 0.5, mouseDelta.x-resolution.x * 0.5);
+        Eigen::Vector3f forward = getCamRot(angle * 0.003) * Eigen::Vector3f (0,0,0.01) * speedMult;
+        Eigen::Vector3f right = getCamRot(angle * 0.003) * Eigen::Vector3f (0.01,0,0) * speedMult;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+            Origin += sf::Glsl::Vec3 (forward.x(), forward.y(), forward.z());
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+            Origin -= sf::Glsl::Vec3 (forward.x(), forward.y(), forward.z());
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+            Origin += sf::Glsl::Vec3 (right.x(), right.y(), right.z());
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+            Origin -= sf::Glsl::Vec3 (right.x(), right.y(), right.z());
+        }
 
 
 
@@ -119,10 +137,12 @@ int main(){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.setMouseCursorVisible(true);
             window.setMouseCursorGrabbed(false);
+            mouseEnabled = true;
         }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             window.setMouseCursorVisible(false);
             window.setMouseCursorGrabbed(true);
+            mouseEnabled = false;
         }
 
 
@@ -144,7 +164,7 @@ int main(){
         fps << "fps: " << curr_fps;
         sf::Font font;
         font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
-        sf::Text text(fps.str(), font, 30);
+        sf::Text text(fps.str(), font, 20);
         text.setFillColor(sf::Color::Green);
         text.setPosition(37.f, 37.f);
         text.setOrigin(0,0);
@@ -157,22 +177,15 @@ int main(){
     return 0;
 }
 
-void mouseMove(sf::Window win){
-    sf::Vector2f center = sf::Vector2f(win.getSize());
-    sf::Glsl::Vec2 mouseDelta = sf::Glsl::Vec2 (sf::Vector2f(sf::Mouse::getPosition(win))-center);
-    sf::Mouse::setPosition(sf::Vector2i (center));
+Eigen::Matrix3f getCamRot(Eigen::Vector2f angle){
+    Eigen::Vector2f cos = Eigen::Vector2f (std::cos(angle.x()), std::cos(angle.y()));
+    Eigen::Vector2f sin = Eigen::Vector2f (std::sin(angle.x()), std::sin(angle.y()));
 
-    sf::Glsl::Vec2 cos = sf::Glsl::Vec2 (std::cos(mouseDelta.x), std::cos(mouseDelta.y));
-    sf::Glsl::Vec2 sin = sf::Glsl::Vec2 (std::sin(mouseDelta.x), std::sin(mouseDelta.y));
-
-    float rot[9] = {
-            cos.y, 0.f, -sin.y,
-            sin.y * sin.x, cos.x, cos.y * sin.x,
-            sin.y * cos.x, -sin.x, cos.y * cos.x
-    };
-    sf::Glsl::Mat3 rotMat(rot);
-
-
+    float vals[9] = {cos.y(), 0, -1*sin.y(),
+                     sin.y()*sin.x(), cos.x(), cos.y()*sin.x(),
+                     sin.y()*cos.x(), -1*sin.x(), cos.y()*cos.x()};
+    Eigen::Matrix3f mat(vals);
+    return mat;
 }
 
 
