@@ -63,6 +63,7 @@ int main(){
     sf::Glsl::Vec2 mouseDelta = sf::Glsl::Vec2 (0,0);
     sf::Glsl::Vec2 mousePos;
     bool mouseEnabled = false;
+    float mouseSens = 0.003;
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
@@ -86,19 +87,6 @@ int main(){
 
         frame_time = clock2.restart().asSeconds();
 
-        //WASD movement
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-//            v.x -= frame_time * speedMult;
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-//            v.x += frame_time * speedMult;
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-//            v.z += frame_time * speedMult;
-//        }
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-//            v.z -= frame_time * speedMult;
-//        }
         Origin += v;
         v = sf::Vector3f (0.f, 0.f, 0.f);
         ShaderFrag.setUniform("origin", Origin);
@@ -110,14 +98,17 @@ int main(){
             mouseDelta += mousePos - sf::Glsl::Vec2(center);
         }
         sf::Mouse::setPosition(center, window);
-        ShaderFrag.setUniform("u_mouse_delta", sf::Glsl::Vec2(mouseDelta.x-1, mouseDelta.y-1));
-        std::cout<<center.x<<" "<<center.y<< std::endl;
-        std::cout<<mousePos.x<<" "<<mousePos.y<< std::endl;
-        std::cout<<std::endl;
+        ShaderFrag.setUniform("u_mouse_delta", mouseDelta);
+        ShaderFrag.setUniform("u_mouse_sensitivity", mouseSens);
+//        std::cout<<center.x<<" "<<center.y<< std::endl;
+//        std::cout<<mouseDelta.x<<" "<<mouseDelta.y<< std::endl;
+//        std::cout<<std::endl;
 
+        //WASD movement
         Eigen::Vector2f angle = Eigen::Vector2f(mouseDelta.y-resolution.y * 0.5, mouseDelta.x-resolution.x * 0.5);
-        Eigen::Vector3f forward = getCamRot(angle * 0.003) * Eigen::Vector3f (0,0,0.01) * speedMult;
-        Eigen::Vector3f right = getCamRot(angle * 0.003) * Eigen::Vector3f (0.01,0,0) * speedMult;
+        Eigen::Vector3f forward = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0,0.01) * speedMult;
+        Eigen::Vector3f right = getCamRot(angle * mouseSens) * Eigen::Vector3f (0.01,0,0) * speedMult;
+        Eigen::Vector3f up = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0.01,0) * speedMult;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             Origin += sf::Glsl::Vec3 (forward.x(), forward.y(), forward.z());
         }
@@ -130,7 +121,12 @@ int main(){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
             Origin -= sf::Glsl::Vec3 (right.x(), right.y(), right.z());
         }
-
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            Origin += sf::Glsl::Vec3 (up.x(), up.y(), up.z());
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+            Origin -= sf::Glsl::Vec3 (up.x(), up.y(), up.z());
+        }
 
 
         //Enabling/disabling mouse cursor
@@ -169,6 +165,7 @@ int main(){
         text.setPosition(37.f, 37.f);
         text.setOrigin(0,0);
         window.draw(text);
+
 
 
         window.display();

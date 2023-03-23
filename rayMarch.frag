@@ -3,11 +3,12 @@
 uniform vec2 u_mouse_delta;
 uniform vec2 u_resolution;
 uniform vec3 origin;
+uniform float u_mouse_sensitivity;
 
 out vec4 fs_color;
 
 const float FOV = 2.0;
-const int MAX_STEPS = 512;
+const int MAX_STEPS = 100;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
@@ -91,7 +92,7 @@ vec4 rayMarch(vec3 ro, vec3 rd){
 
         if(abs(hit)>MAX_DIST)   break;
     }
-    return vec4(0.f, 1.f, 1.f, 0.8f);
+    return vec4(0.3f, 0.36f, 0.6f, rd.y+1.f);
 }
 
 mat3 camRot(vec2 angle){
@@ -115,7 +116,7 @@ void render(inout vec4 col, in vec2 uv){
     vec3 ro = vec3(0,0,0);
     vec3 rd = rayDirection(uv);
 
-    mat3 rot = camRot((u_mouse_delta - u_resolution * 0.5).yx * vec2(0.003, 0.003));
+    mat3 rot = camRot((u_mouse_delta - u_resolution * 0.5).yx * vec2(u_mouse_sensitivity));
     if(u_mouse_delta.x!=0 && u_mouse_delta.y!=0){
         rd = rot * rd;
     }
