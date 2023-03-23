@@ -3,11 +3,13 @@
 uniform vec2 u_mouse_delta;
 uniform vec2 u_resolution;
 uniform vec3 origin;
+uniform float u_mouse_sensitivity;
+uniform float u_Time;
 
 out vec4 fs_color;
 
 const float FOV = 2.0;
-const int MAX_STEPS = 512;
+const int MAX_STEPS = 100;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
@@ -25,6 +27,12 @@ float Voronesque( in vec3 p )
     return max(v.x, v.y);
 }
 
+float fractal(in vec3 p){
+    p = cos(p*2.);
+    float m = length(p) - 1.6;
+    return m + sqrt(Voronesque(p)*0.5);
+}
+
 float sdOctahedron(vec3 p, float s)
 {
     p = abs(p);
@@ -39,24 +47,38 @@ float sdOctahedron(vec3 p, float s)
     return length(vec3(q.x,q.y-s+k,q.z-k));
 }
 
-float fractal(in vec3 p){
-    p = cos(p*2.);
-    float m = length(p) - 1.6;
-    return m + sqrt(Voronesque(p)*0.5);
+float mandelBuilbSDF(vec3 p, int iterations, float power){
+    vec3 z = p;
+    float dr = 1.0;
+    float r = 0;
+    for(int i =0; i<iterations; i++){
+        r = length(z);
+        if(r>2) break;
+        float theta = acos(z.z/r) * sin(u_Time * 0.1f) ;
+        float phi = atan(z.y/z.x);
+        dr = pow(r, power - 1.0) * power * dr + 1.0;
+        float zr = pow(r, power);
+        theta = theta * power;
+        phi = phi * power;
+        z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+        z += p;
+    }
+    return 0.5 * log(r) * r / dr;
 }
 
+
 float map(vec3 p){
-    p = mod(p, 3.f) - 4.0*0.5;
+//    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
-    float sphereDist = length(p) - 1.0;
+    float sphereDist = length(p) - 0.75f;
     float sphereID = 1.0;
     float sphere = sphereDist;
-    //mandelbrot
-    float frac = fractal(p);
+    //mandelbulb
+    float frac = mandelBuilbSDF(p, 15, 6);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = octa;
+    float res = frac;
     return res;
 }
 
@@ -70,12 +92,13 @@ vec3 calcNorm(vec3 pos){
     );
 }
 
-float diffuse_intensity(in vec3 pos, in vec3 normal_dir){
+float lighting(in vec3 pos, in vec3 normal_dir){
     const vec3 l1 = vec3(0.f, -10.f, 0.f);
     const vec3 l2 = vec3(-5.f, -5.f, -5.f);
 
     float temp = max(dot(normal_dir,normalize(pos-l1)), dot(normal_dir,normalize(pos-l2)));
-    return max(0.1f, temp);
+//    return max(0.1f, temp);
+    return max(0.1f, dot(normal_dir, normalize(pos-l1)));
 }
 
 vec4 rayMarch(vec3 ro, vec3 rd){
@@ -86,12 +109,12 @@ vec4 rayMarch(vec3 ro, vec3 rd){
         object += hit;
         if(abs(hit) < HIT_DIST){
             vec3 norm = calcNorm(p);
-            return vec4(vec3(2.f, 1.f, 2.f) * diffuse_intensity(p, norm), 1.f);
+            return pow(vec4(vec3(2.f, 1.f, 2.f) * lighting(p, norm), 1.f), vec4(0.75));
         }
 
         if(abs(hit)>MAX_DIST)   break;
     }
-    return vec4(0.f, 1.f, 1.f, 0.8f);
+    return vec4(0.3f, 0.36f, 0.6f, rd.y+1.f);
 }
 
 mat3 camRot(vec2 angle){
@@ -115,7 +138,7 @@ void render(inout vec4 col, in vec2 uv){
     vec3 ro = vec3(0,0,0);
     vec3 rd = rayDirection(uv);
 
-    mat3 rot = camRot((u_mouse_delta - u_resolution * 0.5).yx * vec2(0.003, 0.003));
+    mat3 rot = camRot((u_mouse_delta - u_resolution * 0.5).yx * vec2(u_mouse_sensitivity));
     if(u_mouse_delta.x!=0 && u_mouse_delta.y!=0){
         rd = rot * rd;
     }

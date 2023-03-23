@@ -14,7 +14,7 @@ FETCHCONTENT_DECLARE(EIGEN
 )
 FETCHCONTENT_MAKEAVAILABLE(EIGEN)
 
-set(SOURCE_FILE main.cpp scene.h)
+set(SOURCE_FILE main.cpp overlays.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
