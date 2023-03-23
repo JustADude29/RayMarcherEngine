@@ -3,14 +3,16 @@
 #include <iomanip>
 #include <math.h>
 
+#include "overlays.h"
+
 #include <Eigen/Dense>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1600;
+const int HEIGHT = 900;
 
 const float xSens = 0.01;
 const float ySens = 0.01;
@@ -66,12 +68,19 @@ int main(){
     bool mouseEnabled = false;
     float mouseSens = 0.003;
 
+    //button
+    sf::Font font;
+    font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
+    sf::Image arrowImg;
+    arrowImg.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/arrow.png");
+    overlays::button exitButtion("exit", font, sf::Color::Green, sf::Vector2f(1400, 850), 20);
+    exitButtion.setSprite(arrowImg, arrowImg);
+
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
     bool running= true;
     while (running){
         window.clear();
-
 
         //resizing and closing
         sf::Event event;
@@ -161,15 +170,11 @@ int main(){
         //fps display
         std::ostringstream fps;
         fps << "fps: " << curr_fps;
-        sf::Font font;
-        font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
         sf::Text text(fps.str(), font, 20);
         text.setFillColor(sf::Color::Green);
         text.setPosition(37.f, 37.f);
         text.setOrigin(0,0);
         window.draw(text);
-
-
 
         window.display();
     }
