@@ -23,6 +23,7 @@ int main(){
     int curr_fps = 60;
     float frame_time;
     float current_time;
+    float q=0;
 
     //create window
     sf::RenderWindow window;
@@ -86,6 +87,8 @@ int main(){
         }
 
         frame_time = clock2.restart().asSeconds();
+        q+=frame_time;
+        ShaderFrag.setUniform("u_Time", q);
 
         Origin += v;
         v = sf::Vector3f (0.f, 0.f, 0.f);

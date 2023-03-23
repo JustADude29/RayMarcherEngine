@@ -4,6 +4,7 @@ uniform vec2 u_mouse_delta;
 uniform vec2 u_resolution;
 uniform vec3 origin;
 uniform float u_mouse_sensitivity;
+uniform float u_Time;
 
 out vec4 fs_color;
 
@@ -11,20 +12,6 @@ const float FOV = 2.0;
 const int MAX_STEPS = 100;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
-
-float Voronesque( in vec3 p )
-{
-
-    vec3 i  = floor(p+dot(p, vec3(0.333333)) );  p -= i - dot(i, vec3(0.166666)) ;
-    vec3 i1 = step(0., p-p.yzx), i2 = max(i1, 1.0-i1.zxy); i1 = min(i1, 1.0-i1.zxy);
-    vec3 p1 = p - i1 + 0.166666, p2 = p - i2 + 0.333333, p3 = p - 0.5;
-    vec3 rnd = vec3(5.46,62.8,164.98); // my tuning
-    vec4 v = max(0.5 - vec4(dot(p, p), dot(p1, p1), dot(p2, p2), dot(p3, p3)), 0.);
-    vec4 d = vec4( dot(i, rnd), dot(i + i1, rnd), dot(i + i2, rnd), dot(i + 1., rnd) );
-    d = fract(sin(d)*1000.)*v*2.;
-    v.x = max(d.x, d.y), v.y = max(d.z, d.w);
-    return max(v.x, v.y);
-}
 
 float sdOctahedron(vec3 p, float s)
 {
@@ -40,24 +27,37 @@ float sdOctahedron(vec3 p, float s)
     return length(vec3(q.x,q.y-s+k,q.z-k));
 }
 
-float fractal(in vec3 p){
-    p = cos(p*2.);
-    float m = length(p) - 1.6;
-    return m + sqrt(Voronesque(p)*0.5);
+float mandelBuilbSDF(vec3 p, int iterations, float power){
+    vec3 z = p;
+    float dr = 1.0;
+    float r = 0;
+    for(int i =0; i<iterations; i++){
+        r = length(z);
+        if(r>2) break;
+        float theta = acos(z.z/r) * sin(u_Time * 0.1f) ;
+        float phi = atan(z.y/z.x);
+        dr = pow(r, power - 1.0) * power * dr + 1.0;
+        float zr = pow(r, power);
+        theta = theta * power;
+        phi = phi * power;
+        z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+        z += p;
+    }
+    return 0.5 * log(r) * r / dr;
 }
 
 float map(vec3 p){
-    p = mod(p, 3.f) - 4.0*0.5;
+//    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
-    float sphereDist = length(p) - 1.0;
+    float sphereDist = length(p) - 0.75f;
     float sphereID = 1.0;
     float sphere = sphereDist;
-    //mandelbrot
-    float frac = fractal(p);
+    //mandelbulb
+    float frac = mandelBuilbSDF(p, 15, 6);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = octa;
+    float res = frac;
     return res;
 }
 
