@@ -13,6 +13,7 @@ const int MAX_STEPS = 100;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
+//--------------------------------------------------------SDFs-------------------------------------------------------------------------------
 float sdOctahedron(vec3 p, float s)
 {
     p = abs(p);
@@ -46,6 +47,7 @@ float mandelBuilbSDF(vec3 p, int iterations, float power){
     return 0.5 * log(r) * r / dr;
 }
 
+//--------------------------------------------------------SDF Scene Map-------------------------------------------------------------------------------
 float map(vec3 p){
 //    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
@@ -53,7 +55,7 @@ float map(vec3 p){
     float sphereID = 1.0;
     float sphere = sphereDist;
     //mandelbulb
-    float frac = mandelBuilbSDF(p, 15, 6);
+    float frac = mandelBuilbSDF(p, 5, 3);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
@@ -61,6 +63,7 @@ float map(vec3 p){
     return res;
 }
 
+//--------------------------------------------------------Calculating normals for light-------------------------------------------------------------------------------
 vec3 calcNorm(vec3 pos){
     vec2 e = vec2(0.001f, 0.f);
     return normalize(
@@ -71,23 +74,47 @@ vec3 calcNorm(vec3 pos){
     );
 }
 
-float diffuse_intensity(in vec3 pos, in vec3 normal_dir){
-    const vec3 l1 = vec3(0.f, -10.f, 0.f);
-    const vec3 l2 = vec3(-5.f, -5.f, -5.f);
-
-    float temp = max(dot(normal_dir,normalize(pos-l1)), dot(normal_dir,normalize(pos-l2)));
-    return max(0.1f, temp);
+//--------------------------------------------------------Shadows-------------------------------------------------------------------------------
+float softShadows(in vec3 p, in vec3 lightPos){
+    float res = 1.0;
+    float dist = 0.01;
+    float lightSize = 0.03;
+    for (int i = 0; i < MAX_STEPS; i++) {
+        float hit = map(p + lightPos * dist).x;
+        res = min(res, hit / (dist * lightSize));
+        dist += hit;
+        if (hit < 0.0001 || dist > 60.0) break;
+    }
+    return clamp(res, 0.0, 1.0);
 }
 
+//----------------------------------------------------------AO----------------------------------------------------------------------------------
+//float ambientOcclusion(in vec3 p, in vec3 norm){
+//
+//}
+
+//--------------------------------------------------------Lights data-------------------------------------------------------------------------------
+//vec4 getLight(in vec3 l_pos, in vec3 pos, in vec3 normal_dir){
+//    vec3 lightPos = vec3(1,10,0);
+//    vec3 L = normalize(lightPos-p);
+//    vec3 N = calcNorm(p);
+//    vec3 V = -rd;
+//    vec3 R = reflect(-L, N);
+//
+//
+//}
+
+
+//--------------------------------------------------------Marching-------------------------------------------------------------------------------
 vec4 rayMarch(vec3 ro, vec3 rd){
     float hit, object=0;
+    vec3 albedo = vec3(1,0,0);
     for(int i=0;i<MAX_STEPS;i++){
         vec3 p = ro + object.x * rd;
         hit = map(p);
         object += hit;
         if(abs(hit) < HIT_DIST){
-            vec3 norm = calcNorm(p);
-            return vec4(vec3(2.f, 1.f, 2.f) * diffuse_intensity(p, norm), 1.f);
+            return vec4(1);
         }
 
         if(abs(hit)>MAX_DIST)   break;
@@ -95,6 +122,9 @@ vec4 rayMarch(vec3 ro, vec3 rd){
     return vec4(0.3f, 0.36f, 0.6f, rd.y+1.f);
 }
 
+
+
+//-----------------------------------------------------Cam rot and rendering-----------------------------------------------------------
 mat3 camRot(vec2 angle){
     vec2 c = cos(angle);
     vec2 s = sin(angle);
