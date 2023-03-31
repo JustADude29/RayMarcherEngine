@@ -58,7 +58,10 @@ int main(){
     sf::Vector3f v = sf::Vector3f (0.f,0.f,1.f);
     sf::Vector3f Origin = sf::Vector3f (0.f, 0.f, 0.f);
     ShaderFrag.setUniform("origin", Origin);
-    float speedMult = 2.f;
+    float speedMult;
+    float normMult = 5.f;
+    float sprintMult = 40.f;
+    bool sprint = false;
 
     //Mouse movement stuff
     sf::Glsl::Vec2 mouseDelta = sf::Glsl::Vec2 (0,0);
@@ -103,12 +106,18 @@ int main(){
         sf::Mouse::setPosition(center, window);
         ShaderFrag.setUniform("u_mouse_delta", mouseDelta);
         ShaderFrag.setUniform("u_mouse_sensitivity", mouseSens);
-//        std::cout<<center.x<<" "<<center.y<< std::endl;
-//        std::cout<<mouseDelta.x<<" "<<mouseDelta.y<< std::endl;
-//        std::cout<<std::endl;
 
         //WASD movement
         Eigen::Vector2f angle = Eigen::Vector2f(mouseDelta.y-resolution.y * 0.5, mouseDelta.x-resolution.x * 0.5);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+            sprint = true;
+        }else{
+            sprint = false;
+        }
+        if(sprint)
+            speedMult = sprintMult;
+        else
+            speedMult = normMult;
         Eigen::Vector3f forward = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0,0.01) * speedMult;
         Eigen::Vector3f right = getCamRot(angle * mouseSens) * Eigen::Vector3f (0.01,0,0) * speedMult;
         Eigen::Vector3f up = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0.01,0) * speedMult;
@@ -127,7 +136,7 @@ int main(){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
             Origin += sf::Glsl::Vec3 (up.x(), up.y(), up.z());
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
             Origin -= sf::Glsl::Vec3 (up.x(), up.y(), up.z());
         }
 

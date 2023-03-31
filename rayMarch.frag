@@ -49,17 +49,17 @@ float mandelBuilbSDF(vec3 p, int iterations, float power){
 
 //--------------------------------------------------------SDF Scene Map-------------------------------------------------------------------------------
 float map(vec3 p){
-//    p = mod(p, 3.f) - 4.0*0.5;
+    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
     float sphereDist = length(p) - 0.75f;
     float sphereID = 1.0;
     float sphere = sphereDist;
     //mandelbulb
-    float frac = mandelBuilbSDF(p, 5, 3);
+    float frac = mandelBuilbSDF(p, 2, 1);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = frac;
+    float res = octa * sin(u_Time * pow(p.x,2));
     return res;
 }
 
@@ -89,32 +89,57 @@ float softShadows(in vec3 p, in vec3 lightPos){
 }
 
 //----------------------------------------------------------AO----------------------------------------------------------------------------------
-//float ambientOcclusion(in vec3 p, in vec3 norm){
-//
-//}
+float ambientOcclusion(in vec3 p, in vec3 norm){
+    float occ = 0.0;
+    float weight = 1.0;
+    for (int i = 0; i < 8; i++) {
+        float len = 0.01 + 0.02 * float(i * i);
+        float dist = map(p + norm * len).x;
+        occ += (len - dist) * weight;
+        weight *= 0.85;
+    }
+    return 1.0 - clamp(0.6 * occ, 0.0, 1.0);
+}
 
 //--------------------------------------------------------Lights data-------------------------------------------------------------------------------
-//vec4 getLight(in vec3 l_pos, in vec3 pos, in vec3 normal_dir){
-//    vec3 lightPos = vec3(1,10,0);
-//    vec3 L = normalize(lightPos-p);
-//    vec3 N = calcNorm(p);
-//    vec3 V = -rd;
-//    vec3 R = reflect(-L, N);
-//
-//
-//}
+vec3 getLight(in vec3 p, in vec3 rd){
+    vec3 lightPos = vec3(0,0,0);
+    vec3 L = normalize(lightPos-p);
+    vec3 N = calcNorm(p);
+    vec3 V = -rd;
+    vec3 R = reflect(-L, N);
+
+    vec3 color = vec3(0, 0.2f,0.4f);
+
+    vec3 specColor= color + vec3(0.2f);
+    vec3 specular = 1.3 * specColor * pow(clamp(dot(R, V), 0.0, 1.0), 10.0);
+    vec3 diffuse = .19 * color * clamp(dot(L, N), 0.0, 1.0);
+    vec3 ambient = 0.05 * color;
+    vec3 fresnel = 0.15 * color * pow(1.0 + dot(rd, N), 3.0);
+
+    float shadow = softShadows(p + N * 0.02, normalize(lightPos));
+    // occ
+    float occ = ambientOcclusion(p, N);
+    // back
+    vec3 back = 0.05 * color * clamp(dot(N, -L), 0.0, 1.0);
+
+    return  (back + ambient + fresnel) * occ + (specular * occ + diffuse) * shadow;
+}
 
 
 //--------------------------------------------------------Marching-------------------------------------------------------------------------------
 vec4 rayMarch(vec3 ro, vec3 rd){
     float hit, object=0;
     vec3 albedo = vec3(1,0,0);
+    vec3 background = vec3(0.3f,0.36f,0.6f);
     for(int i=0;i<MAX_STEPS;i++){
         vec3 p = ro + object.x * rd;
         hit = map(p);
         object += hit;
         if(abs(hit) < HIT_DIST){
-            return vec4(1);
+            vec3 colo = getLight(p, rd);
+            colo = mix(colo, background, 1.0 - exp(-1e-7 * object.x * object.x * object.x));
+            return vec4(colo, 1);
         }
 
         if(abs(hit)>MAX_DIST)   break;
