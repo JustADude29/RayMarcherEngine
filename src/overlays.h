@@ -20,7 +20,9 @@ namespace overlays {
 
             void update(sf::Event& e, sf::Window &window, sf::Color col1, sf::Color col2);
 
-        private:
+            bool activated;
+
+    private:
             virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
         private:
@@ -40,7 +42,6 @@ namespace overlays {
             sf::Sprite buttonImage;
 
             sf::RectangleShape button_shape;
-            bool activated;
         };
 }
 #endif
@@ -53,7 +54,6 @@ overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vec
     text_size = Textsize;
     activated = false;
 
-    size = sf::Vector2f (buttonText.getGlobalBounds().width*2, buttonText.getGlobalBounds().height*2);
 
     borderThickness = 2;
 
@@ -64,12 +64,11 @@ overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vec
     buttonText.setFillColor(baseCol);
 
     buttonText.setOrigin(buttonText.getGlobalBounds().width/2, buttonText.getGlobalBounds().height/2);
-//    buttonText.setOrigin(0,0);
     buttonText.setPosition(position);
     buttonImage.setOrigin(buttonImage.getGlobalBounds().width/2, buttonImage.getGlobalBounds().height/2);
-//    buttonImage.setOrigin(0,0);
     buttonImage.setPosition(position);
 
+    size = sf::Vector2f (buttonText.getGlobalBounds().width*1.5, buttonText.getGlobalBounds().height*1.5);
     button_shape = sf::RectangleShape(size);
     button_shape.setOrigin(button_shape.getGlobalBounds().width/2, button_shape.getGlobalBounds().height/2);
     button_shape.setPosition(position);
@@ -106,11 +105,10 @@ void overlays::button::update(sf::Event& e, sf::Window &window, sf::Color col1, 
 
     if(e.type == sf::Event::MouseMoved) {
         if (mouseInButton) {
-            std::cout<<"ping"<<std::endl;
-            setCol(col2);
+            buttonText.setFillColor(col2);
             activated = true;
         } else {
-            setCol(col1);
+            buttonText.setFillColor(col1);
             activated = false;
         }
     }

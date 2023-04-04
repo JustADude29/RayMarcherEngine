@@ -108,8 +108,8 @@ int main(){
         if(!mouseEnabled){
             mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
             mouseDelta += mousePos - sf::Glsl::Vec2(center);
+            sf::Mouse::setPosition(center, window);
         }
-        sf::Mouse::setPosition(center, window);
         ShaderFrag.setUniform("u_mouse_delta", mouseDelta);
         ShaderFrag.setUniform("u_mouse_sensitivity", mouseSens);
 
@@ -187,6 +187,9 @@ int main(){
         if(mouseEnabled) {
             exit_button.update(event, window, sf::Color::White, sf::Color::Blue);
             window.draw(exit_button);
+
+            if(exit_button.activated)
+                std::cout<<"ping"<<std::endl;
         }
 
         window.display();
