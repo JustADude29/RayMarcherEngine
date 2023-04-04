@@ -9,7 +9,7 @@ uniform float u_Time;
 out vec4 fs_color;
 
 const float FOV = 2.0;
-const int MAX_STEPS = 100;
+const int MAX_STEPS = 500;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
@@ -49,17 +49,18 @@ float mandelBuilbSDF(vec3 p, int iterations, float power){
 
 //--------------------------------------------------------SDF Scene Map-------------------------------------------------------------------------------
 float map(vec3 p){
-    p = mod(p, 3.f) - 4.0*0.5;
+//    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
     float sphereDist = length(p) - 0.75f;
     float sphereID = 1.0;
     float sphere = sphereDist;
     //mandelbulb
-    float frac = mandelBuilbSDF(p, 2, 1);
+    float frac = mandelBuilbSDF(p, 4, 6);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = octa * sin(u_Time * pow(p.x,2));
+    float res = octa;
+//    float res = frac * sin(u_Time * pow(p.x,2));
     return res;
 }
 
@@ -109,15 +110,16 @@ vec3 getLight(in vec3 p, in vec3 rd){
     vec3 V = -rd;
     vec3 R = reflect(-L, N);
 
-    vec3 color = vec3(0, 0.2f,0.4f);
+    vec3 color = 0.8 * vec3(abs(sin(u_Time*0.1)), 0,abs(cos(u_Time*0.1)));
+//    vec3 color = vec3(0, 0,0.4f) + 0.2 * vec3(sin(u_Time*0.1), 0, cos(u_Time*0.1));
 
     vec3 specColor= color + vec3(0.2f);
     vec3 specular = 1.3 * specColor * pow(clamp(dot(R, V), 0.0, 1.0), 10.0);
-    vec3 diffuse = .19 * color * clamp(dot(L, N), 0.0, 1.0);
-    vec3 ambient = 0.05 * color;
+    vec3 diffuse = 1.9 * color * clamp(dot(L, N), 0.0, 1.0);
+    vec3 ambient = 0.15 * color;
     vec3 fresnel = 0.15 * color * pow(1.0 + dot(rd, N), 3.0);
 
-    float shadow = softShadows(p + N * 0.02, normalize(lightPos));
+    float shadow = softShadows(p + N * 0.02, normalize(lightPos)) + 0.02;
     // occ
     float occ = ambientOcclusion(p, N);
     // back

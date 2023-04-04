@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <math.h>
+#include "src/overlays.h"
 
 #include <Eigen/Dense>
 #include <SFML/Window.hpp>
@@ -9,8 +10,8 @@
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 
-const int WIDTH = 1600;
-const int HEIGHT = 900;
+const int WIDTH = 900;
+const int HEIGHT = 700;
 
 const float xSens = 0.01;
 const float ySens = 0.01;
@@ -69,6 +70,11 @@ int main(){
     bool mouseEnabled = false;
     float mouseSens = 0.003;
 
+    //overlays
+    sf::Font font;
+    font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
+    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(40, 50), 30);
+
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
     bool running= true;
@@ -99,7 +105,7 @@ int main(){
 
         //Mouse rotate
         sf::Vector2i center = sf::Vector2i(window.getSize().x/2, window.getSize().y/2);
-        if(sf::Event::MouseMoved && !mouseEnabled){
+        if(!mouseEnabled){
             mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
             mouseDelta += mousePos - sf::Glsl::Vec2(center);
         }
@@ -154,6 +160,7 @@ int main(){
         }
 
 
+
         //draw the rectangle with frag shader as its color
         window.draw(sprite, &ShaderFrag);
 
@@ -170,8 +177,6 @@ int main(){
         //fps display
         std::ostringstream fps;
         fps << "fps: " << curr_fps;
-        sf::Font font;
-        font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
         sf::Text text(fps.str(), font, 20);
         text.setFillColor(sf::Color::Green);
         text.setPosition(37.f, 37.f);
@@ -179,6 +184,10 @@ int main(){
         window.draw(text);
 
 
+        if(mouseEnabled) {
+            exit_button.update(event, window, sf::Color::White, sf::Color::Blue);
+            window.draw(exit_button);
+        }
 
         window.display();
     }
