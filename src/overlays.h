@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "SFML/Graphics.hpp"
+
 namespace overlays {
     class button : public sf::Drawable{
         public:
@@ -17,12 +18,14 @@ namespace overlays {
 
             void setSprite(sf::Image image1, sf::Image image2);
             void setCol(sf::Color col);
+            void setText(std::string newText);
 
             void update(sf::Event& e, sf::Window &window, sf::Color col1, sf::Color col2);
+            void update(sf::Event& e, sf::Window &window, sf::Color col1, sf::Color col2, std::string text);
 
             bool activated;
 
-    private:
+        private:
             virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
         private:
@@ -42,10 +45,29 @@ namespace overlays {
             sf::Sprite buttonImage;
 
             sf::RectangleShape button_shape;
-        };
+    };
+
+    template <typename T>
+    class slider{
+        public:
+            slider();
+
+            slider(std::string text, T lowerLimit, T upperLimit, T defaultValue);
+
+            ~slider();
+
+        private:
+            button sliderButton;
+            T sliderValue;
+            T lowerLimit;
+            T upperLimit;
+            sf::Text sliderText;
+            std::string sliderContent;
+    };
 }
 #endif
 
+//-------------------------------------------------------BUTTON FUNCTIONS START--------------------------------------------------->
 overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vector2f pos, float Textsize, bool imageEnable= false) {
     content = text;
     font = fonts;
@@ -89,6 +111,10 @@ void overlays::button::setCol(sf::Color col){
     buttonText.setFillColor(col);
 }
 
+void overlays::button::setText(std::string newText) {
+    buttonText.setString(newText);
+}
+
 void overlays::button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     if(sprite)
         target.draw(buttonImage);
@@ -113,3 +139,37 @@ void overlays::button::update(sf::Event& e, sf::Window &window, sf::Color col1, 
         }
     }
 }
+
+void overlays::button::update(sf::Event& e, sf::Window &window, sf::Color col1, sf::Color col2, std::string text) {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+    bool mouseInButton = mousePos.x >=  button_shape.getPosition().x - button_shape.getGlobalBounds().width/2
+                         && mousePos.x <= button_shape.getPosition().x + button_shape.getGlobalBounds().width/2
+                         && mousePos.y >= button_shape.getPosition().y - button_shape.getGlobalBounds().height/2
+                         && mousePos.y <= button_shape.getPosition().y + button_shape.getGlobalBounds().height/2;
+
+    if(e.type == sf::Event::MouseMoved) {
+        if (mouseInButton) {
+            buttonText.setFillColor(col2);
+            activated = true;
+        } else {
+            buttonText.setFillColor(col1);
+            activated = false;
+        }
+    }
+
+    buttonText.setString(text);
+}
+
+//-------------------------------------------------------BUTTON FUNCTIONS END--------------------------------------------------->
+
+
+//-------------------------------------------------------SLIDER FUNCTIONS START--------------------------------------------------->
+template <typename T>
+overlays::slider<T>::slider(std::string text, T lowerLimit, T upperLimit, T defaultValue){
+    
+}
+
+
+
+//-------------------------------------------------------SLIDER FUNCTIONS END----------------------------------------------------->

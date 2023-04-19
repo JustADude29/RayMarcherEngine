@@ -10,8 +10,12 @@
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 
-const int WIDTH = 900;
-const int HEIGHT = 700;
+//---------debug macros----------------
+#define ping(x) std::cout<<"ping"<<x<<std::endl
+
+
+const int WIDTH = 1920;
+const int HEIGHT = 1080;
 
 const float xSens = 0.01;
 const float ySens = 0.01;
@@ -25,6 +29,8 @@ int main(){
     float frame_time;
     float current_time;
     float q=0;
+    int coun=0;
+    int steps = 100;
 
     //create window
     sf::RenderWindow window;
@@ -73,11 +79,15 @@ int main(){
     //overlays
     sf::Font font;
     font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
-    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(40, 50), 30);
+    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(1700, 50), 20);
+    overlays::button coordX("", font, sf::Color::White, sf::Vector2f(800, 50), 5);
+    overlays::button coordY("", font, sf::Color::White, sf::Vector2f(800, 50), 5);
+    overlays::button coordZ("", font, sf::Color::White, sf::Vector2f(800, 50), 50);
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
     bool running= true;
+    window.setKeyRepeatEnabled(false);
     while (running){
         window.clear();
 
@@ -148,18 +158,29 @@ int main(){
 
 
         //Enabling/disabling mouse cursor
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            window.setMouseCursorVisible(true);
-            window.setMouseCursorGrabbed(false);
-            mouseEnabled = true;
+        if(sf::Event::KeyReleased && !mouseEnabled) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                window.setMouseCursorVisible(true);
+                window.setMouseCursorGrabbed(false);
+                mouseEnabled = true;
+            }
         }
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            window.setMouseCursorVisible(false);
-            window.setMouseCursorGrabbed(true);
-            mouseEnabled = false;
+        else if(sf::Event::KeyReleased && mouseEnabled) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                window.setMouseCursorVisible(false);
+                window.setMouseCursorGrabbed(true);
+                mouseEnabled = false;
+            }
         }
 
-
+        //changing raymarch steps
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+            steps+=1;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+            steps-=1;
+        }
+        ShaderFrag.setUniform("MAX_STEPS", steps);
 
         //draw the rectangle with frag shader as its color
         window.draw(sprite, &ShaderFrag);
@@ -184,14 +205,16 @@ int main(){
         window.draw(text);
 
 
-        if(mouseEnabled) {
-            exit_button.update(event, window, sf::Color::White, sf::Color::Blue);
-            window.draw(exit_button);
+        exit_button.update(event, window, sf::Color::White, sf::Color(25,23,20, 180), "STEPS:"+std::to_string(steps));
+        window.draw(exit_button);
 
-            if(exit_button.activated)
-                std::cout<<"ping"<<std::endl;
+        if(exit_button.activated){
+            if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+                running = false;
+            }
         }
 
+        coun++;
         window.display();
     }
 

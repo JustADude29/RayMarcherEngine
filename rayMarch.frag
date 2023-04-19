@@ -5,14 +5,16 @@ uniform vec2 u_resolution;
 uniform vec3 origin;
 uniform float u_mouse_sensitivity;
 uniform float u_Time;
+uniform int u_steps;
 
 out vec4 fs_color;
 
 const float FOV = 2.0;
-const int MAX_STEPS = 500;
+uniform int MAX_STEPS = 500;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
+//MAX_STEPS=u_steps;
 //--------------------------------------------------------SDFs-------------------------------------------------------------------------------
 float sdOctahedron(vec3 p, float s)
 {
@@ -55,11 +57,11 @@ float map(vec3 p){
     float sphereID = 1.0;
     float sphere = sphereDist;
     //mandelbulb
-    float frac = mandelBuilbSDF(p, 4, 6);
+    float frac = mandelBuilbSDF(p, 15, 6);
     //octahedron
     float octa = sdOctahedron(p, 1);
     //result
-    float res = octa;
+    float res = frac;
 //    float res = frac * sin(u_Time * pow(p.x,2));
     return res;
 }
