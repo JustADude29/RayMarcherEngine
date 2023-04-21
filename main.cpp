@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
+#include <GLFW/glfw3.h>
+//#include <glad/glad.h>
 
 const int WIDTH = 1600;
 const int HEIGHT = 900;

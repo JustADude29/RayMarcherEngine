@@ -14,12 +14,25 @@ FETCHCONTENT_DECLARE(EIGEN
 )
 FETCHCONTENT_MAKEAVAILABLE(EIGEN)
 
-set(SOURCE_FILE main.cpp scene.h)
+FETCHCONTENT_DECLARE(GLFW
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+)
+FETCHCONTENT_MAKEAVAILABLE(GLFW)
+
+FetchContent_Declare(glad
+        GIT_REPOSITORY https://github.com/SasLuca/MyGlad.git
+        GIT_TAG master
+)
+FETCHCONTENT_MAKEAVAILABLE(glad)
+
+set(SOURCE_FILE main.cpp mainNew.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
+add_subdirectory(src)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
