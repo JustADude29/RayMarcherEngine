@@ -25,7 +25,7 @@ FetchContent_Declare(glad
 )
 FETCHCONTENT_MAKEAVAILABLE(glad)
 
-set(SOURCE_FILE main.cpp mainNew.cpp)
+set(SOURCE_FILE mainNew.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 add_subdirectory(src)
 
