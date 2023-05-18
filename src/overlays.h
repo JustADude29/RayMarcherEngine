@@ -37,7 +37,7 @@ namespace overlays {
             float borderThickness;
             sf::Text buttonText;
 
-            bool sprite;
+            bool isSprite;
             sf::Texture t1;
             sf::Texture t2;
 
@@ -52,7 +52,7 @@ namespace overlays {
         public:
             slider();
 
-            slider(std::string text, T lowerLimit, T upperLimit, T defaultValue);
+            slider(std::string text, sf::Font font, T lowerLimit, T upperLimit, T defaultValue);
 
             ~slider();
 
@@ -68,7 +68,7 @@ namespace overlays {
 #endif
 
 //-------------------------------------------------------BUTTON FUNCTIONS START--------------------------------------------------->
-overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vector2f pos, float Textsize, bool imageEnable= false) {
+overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vector2f pos, float Textsize, bool imageEnable = false) {
     content = text;
     font = fonts;
     baseCol = col;
@@ -79,7 +79,7 @@ overlays::button::button(std::string text,sf::Font fonts, sf::Color col, sf::Vec
 
     borderThickness = 2;
 
-    sprite = imageEnable;
+    isSprite = imageEnable;
     buttonText.setString(content);
     buttonText.setFont(font);
     buttonText.setCharacterSize(Textsize);
@@ -116,7 +116,7 @@ void overlays::button::setText(std::string newText) {
 }
 
 void overlays::button::draw(sf::RenderTarget &target, sf::RenderStates states) const{
-    if(sprite)
+    if(isSprite)
         target.draw(buttonImage);
     target.draw(buttonText);
 }
@@ -151,9 +151,13 @@ void overlays::button::update(sf::Event& e, sf::Window &window, sf::Color col1, 
     if(e.type == sf::Event::MouseMoved) {
         if (mouseInButton) {
             buttonText.setFillColor(col2);
+            if(isSprite)
+                buttonImage.setTexture(t2);
             activated = true;
         } else {
             buttonText.setFillColor(col1);
+            if(isSprite)
+                buttonImage.setTexture(t1);
             activated = false;
         }
     }
@@ -166,8 +170,8 @@ void overlays::button::update(sf::Event& e, sf::Window &window, sf::Color col1, 
 
 //-------------------------------------------------------SLIDER FUNCTIONS START--------------------------------------------------->
 template <typename T>
-overlays::slider<T>::slider(std::string text, T lowerLimit, T upperLimit, T defaultValue){
-    
+overlays::slider<T>::slider(std::string text, sf::Font font, T lowerLimit, T upperLimit, T defaultValue){
+    overlays::button sliderButton();
 }
 
 

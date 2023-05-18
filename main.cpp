@@ -14,8 +14,8 @@
 #define ping(x) std::cout<<"ping"<<x<<std::endl
 
 
-const int WIDTH = 1920;
-const int HEIGHT = 1080;
+const int WIDTH = 1600;
+const int HEIGHT = 900;
 
 const float xSens = 0.01;
 const float ySens = 0.01;
@@ -40,7 +40,7 @@ int main(){
 
     //loading shader
     sf::Shader ShaderFrag;
-    if(!ShaderFrag.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/rayMarch.frag", sf::Shader::Fragment)){
+    if(!ShaderFrag.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/rayMarch.frag", sf::Shader::Fragment)){
         std::cerr<<"Could not load Fragment Shader\n";
         return -1;
     }
@@ -78,11 +78,16 @@ int main(){
 
     //overlays
     sf::Font font;
-    font.loadFromFile("/home/pavan/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
-    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(1700, 50), 20);
-    overlays::button coordX("", font, sf::Color::White, sf::Vector2f(800, 50), 5);
-    overlays::button coordY("", font, sf::Color::White, sf::Vector2f(800, 50), 5);
-    overlays::button coordZ("", font, sf::Color::White, sf::Vector2f(800, 50), 50);
+    font.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
+    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(37, 80), 20);
+    overlays::button coordX("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
+    overlays::button coordY("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
+    overlays::button coordZ("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
+    overlays::button test("test", font, sf::Color::White, sf::Vector2f(200,80), 30, true);
+    sf::Image image1, image2;
+    image1.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/Homework folder.png");
+    image2.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/idk.png");
+    test.setSprite(image1, image2);
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
@@ -165,8 +170,8 @@ int main(){
                 mouseEnabled = true;
             }
         }
-        else if(sf::Event::KeyReleased && mouseEnabled) {
-            if (event.key.code == sf::Keyboard::Escape) {
+        if(mouseEnabled) {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 window.setMouseCursorVisible(false);
                 window.setMouseCursorGrabbed(true);
                 mouseEnabled = false;
@@ -206,7 +211,9 @@ int main(){
 
 
         exit_button.update(event, window, sf::Color::White, sf::Color(25,23,20, 180), "STEPS:"+std::to_string(steps));
+        test.update(event, window, sf::Color::White, sf::Color::White);
         window.draw(exit_button);
+        window.draw(test);
 
         if(exit_button.activated){
             if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
@@ -214,7 +221,6 @@ int main(){
             }
         }
 
-        coun++;
         window.display();
     }
 
