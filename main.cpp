@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <math.h>
 #include "src/overlays.h"
+#include <filesystem>
 
 #include <Eigen/Dense>
 #include <SFML/Window.hpp>
@@ -32,21 +33,24 @@ int main(){
     int coun=0;
     int steps = 100;
 
+    std::string curr_path = std::filesystem::current_path();
+    curr_path+="/..";
+
     //create window
     sf::RenderWindow window;
-    window.create(sf::VideoMode(WIDTH, HEIGHT), "RayMarching", sf::Style::Default);
+    window.create(sf::VideoMode::getDesktopMode(), "RayMarching", sf::Style::Fullscreen);
     window.setFramerateLimit(curr_fps);
     window.setActive(true);
 
     //loading shader
     sf::Shader ShaderFrag;
-    if(!ShaderFrag.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/rayMarch.frag", sf::Shader::Fragment)){
+    if(!ShaderFrag.loadFromFile(curr_path+"/rayMarch.frag", sf::Shader::Fragment)){
         std::cerr<<"Could not load Fragment Shader\n";
         return -1;
     }
 
     //set initial resolution
-    sf::Glsl::Vec2 resolution(WIDTH, HEIGHT);
+    sf::Glsl::Vec2 resolution = sf::Glsl::Vec2 (window.getSize().x, window.getSize().y);
     ShaderFrag.setUniform("u_resolution", resolution);
 
     sf::Clock clock1;
@@ -61,14 +65,21 @@ int main(){
     sprite.setTexture(texture);
     auto shape = sf::RectangleShape{sf::Vector2f{window.getSize()}};
 
+    sf::RectangleShape rect(sf::Vector2f(resolution.x/4-20.0f, resolution.y-10.0f));
+    rect.setOrigin(rect.getGlobalBounds().width/2, rect.getGlobalBounds().height/2);
+    rect.setPosition(sf::Vector2f(7*resolution.x/8, resolution.y/2));
+    rect.setFillColor(sf::Color(220,220,220,100));
+    rect.setOutlineColor(sf::Color::Black);
+    rect.setOutlineThickness(2);
+
+
     //WASD movement stuff
     sf::Vector3f v = sf::Vector3f (0.f,0.f,1.f);
-    sf::Vector3f Origin = sf::Vector3f (0.f, 0.f, 0.f);
+    sf::Vector3f Origin = sf::Vector3f (10.f, 0.f, 0.f);
     ShaderFrag.setUniform("origin", Origin);
     float speedMult;
-    float normMult = 5.f;
+    float normMult = 15.f;
     float sprintMult = 40.f;
-    bool sprint = false;
 
     //Mouse movement stuff
     sf::Glsl::Vec2 mouseDelta = sf::Glsl::Vec2 (0,0);
@@ -78,16 +89,8 @@ int main(){
 
     //overlays
     sf::Font font;
-    font.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/Roboto-Black.ttf");
-    overlays::button exit_button("Exit", font, sf::Color::White, sf::Vector2f(37, 80), 20);
-    overlays::button coordX("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
-    overlays::button coordY("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
-    overlays::button coordZ("", font, sf::Color::White, sf::Vector2f(0, 0), 5);
-    overlays::button test("test", font, sf::Color::White, sf::Vector2f(200,80), 30, true);
-    sf::Image image1, image2;
-    image1.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/Homework folder.png");
-    image2.loadFromFile("/home/dude/CLionProjects/RayMarcherEngine/idk.png");
-    test.setSprite(image1, image2);
+    font.loadFromFile(curr_path+"/Roboto-Black.ttf");
+    overlays::button exit_button("EXIT", font, sf::Color::White, sf::Vector2f(7*resolution.x/8, 9.5*resolution.y/10), 40);
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
@@ -104,7 +107,6 @@ int main(){
                 running = false;
             }
             else if(event.type == sf::Event::Resized){
-                //sf::Glsl::Vec2 resolutionTemp(event.size.width, event.size.height);
                 resolution = sf::Glsl::Vec2(event.size.width, event.size.height);
                 ShaderFrag.setUniform("u_resolution", resolution);
             }
@@ -119,7 +121,7 @@ int main(){
         ShaderFrag.setUniform("origin", Origin);
 
         //Mouse rotate
-        sf::Vector2i center = sf::Vector2i(window.getSize().x/2, window.getSize().y/2);
+        sf::Vector2i center = sf::Vector2i(resolution.x/2, resolution.y/2);
         if(!mouseEnabled){
             mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
             mouseDelta += mousePos - sf::Glsl::Vec2(center);
@@ -131,14 +133,10 @@ int main(){
         //WASD movement
         Eigen::Vector2f angle = Eigen::Vector2f(mouseDelta.y-resolution.y * 0.5, mouseDelta.x-resolution.x * 0.5);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-            sprint = true;
+            speedMult=sprintMult;
         }else{
-            sprint = false;
+            speedMult=normMult;
         }
-        if(sprint)
-            speedMult = sprintMult;
-        else
-            speedMult = normMult;
         Eigen::Vector3f forward = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0,0.01) * speedMult;
         Eigen::Vector3f right = getCamRot(angle * mouseSens) * Eigen::Vector3f (0.01,0,0) * speedMult;
         Eigen::Vector3f up = getCamRot(angle * mouseSens) * Eigen::Vector3f (0,0.01,0) * speedMult;
@@ -172,9 +170,12 @@ int main(){
         }
         if(mouseEnabled) {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                window.setMouseCursorVisible(false);
-                window.setMouseCursorGrabbed(true);
-                mouseEnabled = false;
+                if(window.mapPixelToCoords(sf::Mouse::getPosition(window)).x < 3 * resolution.x/4) {
+                    sf::Mouse::setPosition(center, window);
+                    window.setMouseCursorVisible(false);
+                    window.setMouseCursorGrabbed(true);
+                    mouseEnabled = false;
+                }
             }
         }
 
@@ -184,8 +185,9 @@ int main(){
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
             steps-=1;
+            if(steps<=0)
+                steps=0;
         }
-        ShaderFrag.setUniform("MAX_STEPS", steps);
 
         //draw the rectangle with frag shader as its color
         window.draw(sprite, &ShaderFrag);
@@ -203,17 +205,23 @@ int main(){
         //fps display
         std::ostringstream fps;
         fps << "fps: " << curr_fps;
-        sf::Text text(fps.str(), font, 20);
-        text.setFillColor(sf::Color::Green);
-        text.setPosition(37.f, 37.f);
-        text.setOrigin(0,0);
-        window.draw(text);
+        sf::Text fps_text(fps.str(), font, 20);
+        sf::Text steps_text("STEPS:"+std::to_string(steps), font, 20);
+        fps_text.setFillColor(sf::Color::Green);
+        fps_text.setPosition(37.f, 37.f);
+        fps_text.setOrigin(0, 0);
+        steps_text.setFillColor(sf::Color::Red);
+        steps_text.setPosition(37.f, 57.f);
+        steps_text.setOrigin(0, 0);
+        window.draw(fps_text);
+        window.draw(steps_text);
 
+        if(mouseEnabled) {
+            window.draw(rect);
+            window.draw(exit_button);
+        }
 
-        exit_button.update(event, window, sf::Color::White, sf::Color(25,23,20, 180), "STEPS:"+std::to_string(steps));
-        test.update(event, window, sf::Color::White, sf::Color::White);
-        window.draw(exit_button);
-        window.draw(test);
+        exit_button.update(event, window, sf::Color::White, sf::Color(25,23,20, 180), "EXIT");
 
         if(exit_button.activated){
             if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){

@@ -14,8 +14,16 @@ uniform int MAX_STEPS = 500;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
-//MAX_STEPS=u_steps;
 //--------------------------------------------------------SDFs-------------------------------------------------------------------------------
+float sdSphere(vec3 p, float r){
+    return length(p) - r;
+}
+
+float sdCylinder(vec3 p, vec2 dim){
+    vec2 d = abs(vec2(length(p.xz),p.y)) - dim;
+    return min(max(d.x,d.y),0.0) + length(max(d,0.0));
+}
+
 float sdOctahedron(vec3 p, float s)
 {
     p = abs(p);
@@ -49,21 +57,28 @@ float mandelBuilbSDF(vec3 p, int iterations, float power){
     return 0.5 * log(r) * r / dr;
 }
 
+float smoothMin(float distA, float distB, float blendStrength){
+    float h = max(blendStrength-abs(distA-distB), 0)/blendStrength;
+    return min(distA, distB) - h*h*h*blendStrength*1/6.0;
+}
+
 //--------------------------------------------------------SDF Scene Map-------------------------------------------------------------------------------
 float map(vec3 p){
 //    p = mod(p, 3.f) - 4.0*0.5;
     //sphere
-    float sphereDist = length(p) - 0.75f;
-    float sphereID = 1.0;
-    float sphere = sphereDist;
+    float sphere = sdSphere(p,1);
+    float sphere2 = sdSphere(p-10.f, 2);
     //mandelbulb
     float frac = mandelBuilbSDF(p, 15, 6);
     //octahedron
-    float octa = sdOctahedron(p, 1);
+    float octa = sdOctahedron(p, 6);
+    //cylinder
+    float cylinder = sdCylinder(p, vec2(0.2,1));
     //result
-    float res = frac;
+//    float res = min(sphere, sphere2);
 //    float res = frac * sin(u_Time * pow(p.x,2));
-    return res;
+    float res = min(sphere, sphere2);
+    return sphere2;
 }
 
 //--------------------------------------------------------Calculating normals for light-------------------------------------------------------------------------------
@@ -112,8 +127,8 @@ vec3 getLight(in vec3 p, in vec3 rd){
     vec3 V = -rd;
     vec3 R = reflect(-L, N);
 
-    vec3 color = 0.8 * vec3(abs(sin(u_Time*0.1)), 0,abs(cos(u_Time*0.1)));
-//    vec3 color = vec3(0, 0,0.4f) + 0.2 * vec3(sin(u_Time*0.1), 0, cos(u_Time*0.1));
+//    vec3 color = 0.8 * vec3(abs(sin(u_Time*0.1)), 0,abs(cos(u_Time*0.1)));
+    vec3 color = vec3(0.2,0.4,0.2);
 
     vec3 specColor= color + vec3(0.2f);
     vec3 specular = 1.3 * specColor * pow(clamp(dot(R, V), 0.0, 1.0), 10.0);
@@ -130,12 +145,13 @@ vec3 getLight(in vec3 p, in vec3 rd){
     return  (back + ambient + fresnel) * occ + (specular * occ + diffuse) * shadow;
 }
 
-
 //--------------------------------------------------------Marching-------------------------------------------------------------------------------
 vec4 rayMarch(vec3 ro, vec3 rd){
     float hit, object=0;
     vec3 albedo = vec3(1,0,0);
     vec3 background = vec3(0.3f,0.36f,0.6f);
+    int stepThreshold = 40;
+    float minDist = 1.f;
     for(int i=0;i<MAX_STEPS;i++){
         vec3 p = ro + object.x * rd;
         hit = map(p);
@@ -144,6 +160,9 @@ vec4 rayMarch(vec3 ro, vec3 rd){
             vec3 colo = getLight(p, rd);
             colo = mix(colo, background, 1.0 - exp(-1e-7 * object.x * object.x * object.x));
             return vec4(colo, 1);
+        }
+        if(i>stepThreshold){
+            return vec4(1);
         }
 
         if(abs(hit)>MAX_DIST)   break;
