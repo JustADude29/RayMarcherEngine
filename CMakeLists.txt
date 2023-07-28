@@ -15,17 +15,16 @@ FETCHCONTENT_DECLARE(EIGEN
 FETCHCONTENT_MAKEAVAILABLE(EIGEN)
 
 set(SOURCE_FILE main.cpp)
-add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 include_directories(src)
 
+
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32 main.cpp)
+else()
+    add_executable(${PROJECT_NAME} ${SOURCE_FILE})
+endif()
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
-
-if(WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}>
-            $<TARGET_FILE_DIR:${PROJECT_NAME}> COMMAND_EXPAND_LISTS)
-endif()
 
 install(TARGETS ${PROJECT_NAME})
