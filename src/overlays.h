@@ -17,6 +17,7 @@ namespace overlays {
             ~button();
 
             void setSprite(sf::Image image1, sf::Image image2);
+            void setSpriteScale(sf::Vector2f factor);
             void setCol(sf::Color col);
             void setText(std::string newText);
 
@@ -45,6 +46,7 @@ namespace overlays {
             sf::Sprite buttonImage;
 
             sf::RectangleShape button_shape;
+
     };
 
     template <typename T>
@@ -104,6 +106,16 @@ void overlays::button::setSprite(sf::Image image1, sf::Image image2) {
     t1.loadFromImage(image1);
     t2.loadFromImage(image2);
     buttonImage.setTexture(t1);
+    size = sf::Vector2f (buttonImage.getGlobalBounds().width*1.5, buttonImage.getGlobalBounds().height*1.5);
+//    std::cout<<size.x<<" "<<size.y<<"hello"<<std::endl;
+    button_shape = sf::RectangleShape(size);
+    button_shape.setOrigin(button_shape.getGlobalBounds().width/2, button_shape.getGlobalBounds().height/2);
+    button_shape.setPosition(position);
+}
+
+void overlays::button::setSpriteScale(sf::Vector2f factor){
+    buttonImage.setScale(factor);
+    setSprite(t1.copyToImage(), t2.copyToImage());
 }
 
 void overlays::button::setCol(sf::Color col){

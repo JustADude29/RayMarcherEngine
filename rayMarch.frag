@@ -10,7 +10,8 @@ uniform int u_steps;
 out vec4 fs_color;
 
 const float FOV = 2.0;
-uniform int MAX_STEPS = 500;
+int MAX_STEPS = u_steps;
+//int MAX_STEPS = 500;
 const float MAX_DIST = 500*2;
 const float HIT_DIST = 0.001;
 
@@ -63,8 +64,10 @@ float smoothMin(float distA, float distB, float blendStrength){
 }
 
 //--------------------------------------------------------SDF Scene Map-------------------------------------------------------------------------------
+uniform bool u_infinite=true;
 float map(vec3 p){
-//    p = mod(p, 3.f) - 4.0*0.5;
+    if(u_infinite)
+        p = mod(p, 3.f) - 4.0*0.5;
     //sphere
     float sphere = sdSphere(p,1);
     float sphere2 = sdSphere(p-10.f, 2);
@@ -78,7 +81,7 @@ float map(vec3 p){
 //    float res = min(sphere, sphere2);
 //    float res = frac * sin(u_Time * pow(p.x,2));
     float res = min(sphere, sphere2);
-    return sphere2;
+    return sphere;
 }
 
 //--------------------------------------------------------Calculating normals for light-------------------------------------------------------------------------------
@@ -146,6 +149,7 @@ vec3 getLight(in vec3 p, in vec3 rd){
 }
 
 //--------------------------------------------------------Marching-------------------------------------------------------------------------------
+uniform bool u_outline;
 vec4 rayMarch(vec3 ro, vec3 rd){
     float hit, object=0;
     vec3 albedo = vec3(1,0,0);
@@ -161,7 +165,7 @@ vec4 rayMarch(vec3 ro, vec3 rd){
             colo = mix(colo, background, 1.0 - exp(-1e-7 * object.x * object.x * object.x));
             return vec4(colo, 1);
         }
-        if(i>stepThreshold){
+        if(i>stepThreshold && u_outline){
             return vec4(1);
         }
 
