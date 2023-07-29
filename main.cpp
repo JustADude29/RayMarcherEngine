@@ -26,7 +26,7 @@ const float ySens = 0.01;
 Eigen::Matrix3f getCamRot(Eigen::Vector2f angle);
 bool leftClickListen();
 
-int main(){
+int main(int argv, char* argc[]){
     //fps stuff
     int frame_count = 0;
     int curr_fps = 60;
@@ -36,9 +36,14 @@ int main(){
     int steps = 100;
 
 
-    std::string curr_path = std::filesystem::current_path();
+//    std::string curr_path = std::filesystem::current_path();
+//    curr_path+="/..";
+    std::string curr_path = argc[0];
+    for(int i=0; i<15; i++){
+        curr_path.pop_back();
+    }
     curr_path+="/..";
-
+    ping(curr_path);
 
     //create window
     sf::RenderWindow window;
