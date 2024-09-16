@@ -39,22 +39,20 @@ int main(int argv, char* argc[]){
 //    std::string curr_path = std::filesystem::current_path();
 //    curr_path+="/..";
     std::string curr_path = argc[0];
-    for(int i=0; i<15; i++){
-        curr_path.pop_back();
-    }
-    curr_path+="/..";
+    while(curr_path.back()!='/') curr_path.pop_back();
+//    curr_path+="/..";
     ping(curr_path);
 
     //create window
     sf::RenderWindow window;
-    window.create(sf::VideoMode::getDesktopMode(), "RayMarching", sf::Style::Fullscreen);
+    window.create(sf::VideoMode::getDesktopMode(), "RayMarching");
     window.setFramerateLimit(curr_fps);
     window.setActive(true);
 
 
     //loading shader
     sf::Shader ShaderFrag[5];
-    if(!ShaderFrag[0].loadFromFile(curr_path+"/rayMarch.frag", sf::Shader::Fragment)){
+    if(!ShaderFrag[0].loadFromFile(curr_path + "rayMarch.frag", sf::Shader::Fragment)){
         std::cerr<<"Could not load Fragment Shader\n";
         return -1;
     }
@@ -98,13 +96,13 @@ int main(int argv, char* argc[]){
 
     //overlays
     sf::Font font;
-    font.loadFromFile(curr_path+"/Roboto-Black.ttf");
+    font.loadFromFile(curr_path+"assets/Roboto-Black.ttf");
     overlays::button exit_button("EXIT", font, sf::Color::White, sf::Vector2f(7 * resolution.x/8, 9.5f * resolution.y/10), 40);
 
     sf::Image increaseImage;
     sf::Image increaseImageDark;
     overlays::button increaseSteps_button("", font, sf::Color::White, sf::Vector2f(7.5f * resolution.x/8, resolution.y/10), 10, true);
-    if(increaseImage.loadFromFile(curr_path+"/assets/plus.png") && increaseImageDark.loadFromFile(curr_path+"/assets/plus_dark.png")){
+    if(increaseImage.loadFromFile(curr_path+"assets/plus.png") && increaseImageDark.loadFromFile(curr_path+"assets/plus_dark.png")){
         increaseSteps_button.setSprite(increaseImage, increaseImageDark);
         increaseSteps_button.setSpriteScale(sf::Vector2f(0.5,0.5));
     } else {
@@ -114,7 +112,7 @@ int main(int argv, char* argc[]){
     sf::Image decreaseImage;
     sf::Image decreaseImageDark;
     overlays::button decreaseSteps_button("", font, sf::Color::White, sf::Vector2f(6.5f * resolution.x/8, resolution.y/10), 10,true);
-    if(decreaseImage.loadFromFile(curr_path + "/assets/minus.png") && decreaseImageDark.loadFromFile(curr_path + "/assets/minus_dark.png")) {
+    if(decreaseImage.loadFromFile(curr_path+"assets/minus.png") && decreaseImageDark.loadFromFile(curr_path+"assets/minus_dark.png")) {
         decreaseSteps_button.setSprite(decreaseImage, decreaseImageDark);
         decreaseSteps_button.setSpriteScale(sf::Vector2f(0.5,0.5));
     } else {

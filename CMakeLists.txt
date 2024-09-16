@@ -27,4 +27,6 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rayMarch.frag ${CMAKE_CURRENT_BINARY_DIR}/rayMarch.frag COPYONLY)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 install(TARGETS ${PROJECT_NAME})
