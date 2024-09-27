@@ -79,9 +79,9 @@ float map(vec3 p){
     float cylinder = sdCylinder(p, vec2(0.2,1));
     //result
 //    float res = min(sphere, sphere2);
-//    float res = frac * sin(u_Time * pow(p.x,2));
-    float res = min(sphere, sphere2);
-    return sphere;
+    float res = frac;
+//    float res = min(sphere, sphere2);
+    return frac;
 }
 
 //--------------------------------------------------------Calculating normals for light-------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ float softShadows(in vec3 p, in vec3 lightPos){
         dist += hit;
         if (hit < 0.0001 || dist > 60.0) break;
     }
-    return clamp(res, 0.0, 1.0);
+    return clamp(res, 0.0, 0.5);
 }
 
 //----------------------------------------------------------AO----------------------------------------------------------------------------------
@@ -130,8 +130,8 @@ vec3 getLight(in vec3 p, in vec3 rd){
     vec3 V = -rd;
     vec3 R = reflect(-L, N);
 
-//    vec3 color = 0.8 * vec3(abs(sin(u_Time*0.1)), 0,abs(cos(u_Time*0.1)));
-    vec3 color = vec3(0.2,0.4,0.2);
+    vec3 color = 0.8 * vec3(abs(sin(u_Time*0.1)), 0,abs(cos(u_Time*0.1)));
+//    vec3 color = vec3(0.2,0.4,0.2);
 
     vec3 specColor= color + vec3(0.2f);
     vec3 specular = 1.3 * specColor * pow(clamp(dot(R, V), 0.0, 1.0), 10.0);
